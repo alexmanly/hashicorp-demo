@@ -1,3 +1,17 @@
+/application/build.sh
+/application/.settings
+/application/target
+/packer/build.sh
+/terraform-application/build.sh
+/terraform-application/terraform.tfstate
+/terraform-application/terraform.tfstate.backup
+/terraform-consul/build.sh
+/terraform-consul/terraform.tfstate
+/terraform-consul/terraform.tfstate.backup
+/terraform-vault/build.sh
+/terraform-vault/terraform.tfstate
+/terraform-vault/terraform.tfstate.backup
+
 *.class
 
 # Mobile Tools for Java (J2ME)

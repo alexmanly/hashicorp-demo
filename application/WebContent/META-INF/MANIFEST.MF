@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Application-Version: 0.0.1-SNAPSHOT
+Implementation-Title: hashiapp-demo
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: alex
+groupId: com.amanly
+Specification-Title: hashiapp-demo
+Implementation-Vendor-Id: com.amanly
+artifactId: hashiapp-demo
+Build-Jdk: 1.8.0_73
+Specification-Version: 0.0.1-SNAPSHOT
+Created-By: Maven Integration for Eclipse
+

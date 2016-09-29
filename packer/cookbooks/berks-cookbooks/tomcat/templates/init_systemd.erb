@@ -1,0 +1,25 @@
+# Systemd unit file for tomcat_<%= @instance %>
+
+[Unit]
+Description=<%= @instance %> Apache Tomcat Application
+After=syslog.target network.target
+
+[Service]
+Type=simple
+
+<% @env_vars.each do |h| -%>
+  <% h.each_pair do |k,v| -%>
+Environment="<%= k -%>=<%= v %>"
+  <% end -%>
+<% end -%>
+
+ExecStart=<%= @install_path %>/bin/catalina.sh run
+ExecStop=<%= @install_path %>/bin/catalina.sh stop
+Restart=on-failure
+RestartSec=2
+
+User=<%= @user %>
+Group=<%= @group %>
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+require 'rake'
+
+task :berks do
+  sh "cd cookbooks && berks install && berks vendor"
+end
+
+task default: [:berks] do
+  sh "packer validate basebuild.json"
+  sh "packer build basebuild.json"
+end
+

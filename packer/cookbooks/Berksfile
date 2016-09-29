@@ -1,0 +1,7 @@
+source 'https://supermarket.chef.io/'
+
+# public cookbooks
+cookbook 'git', '~> 4.4.1'
+cookbook 'java', '= 1.26.0'
+cookbook 'tomcat', '~> 2.3.2'
+
