@@ -102,7 +102,7 @@ resource "aws_instance" "app" {
 
     provisioner "remote-exec" {
         inline = [
-          "sudo sed -i s/PRIVATE_IP/${aws_instance.app.private_ip}/g /opt/nomad/server.hcl",
+          "sudo sed -i s/PRIVATE_IP/${self.private_ip}/g /opt/nomad/server.hcl",
         ]
     }
 
