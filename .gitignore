@@ -1,6 +1,9 @@
 /application/build.sh
 /application/.settings
 /application/target
+/application-springboot/build.sh
+/application-springboot/.settings
+/application-springboot/target
 /packer/build.sh
 /terraform-application/build.sh
 /terraform-application/terraform.tfstate

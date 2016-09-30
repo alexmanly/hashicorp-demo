@@ -55,9 +55,32 @@ resource "aws_instance" "app" {
         destination = "/tmp/consul.service"
     }
 
+    provisioner "file" {
+        source = "${path.module}/scripts/rhel_nomad.service"
+        destination = "/tmp/nomad.service"
+    }
+
+    provisioner "file" {
+        source = "${path.module}/scripts/nomad_server.hcl"
+        destination = "/tmp/server.hcl"
+    }
+
     provisioner "remote-exec" {
         scripts = [
             "${path.module}/scripts/install_consul.sh",
+            "${path.module}/scripts/install_nomad.sh",
+        ]
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+          "sudo sed -i s/IP_ADDRESS/${aws_instance.app.private_ip}/g /opt/nomad/server.hcl",
+          "sudo sed -i s/CONSUL_URL/${consul}/g /opt/nomad/server.hcl",
+        ]
+    }
+
+    provisioner "remote-exec" {
+        scripts = [
             "${path.module}/scripts/service.sh",
             "${path.module}/scripts/ip_tables.sh",
         ]
@@ -93,6 +116,13 @@ resource "aws_security_group" "app" {
     ingress {
         from_port = 22
         to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 4646
+        to_port = 4648
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
