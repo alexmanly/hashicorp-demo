@@ -11,7 +11,7 @@ provider "consul" {
 }
 
 # Access a key in Consul
-resource "consul_keys" "app" {
+data "consul_keys" "app" {
     key {
         name = "ami"
         path = "service/app/launch_ami"
@@ -20,30 +20,53 @@ resource "consul_keys" "app" {
         name = "hashiapp_demo_url"
         path = "service/app/hashiapp_demo_url"
     }
+    key {
+        name = "hashiapp_springboot_demo_url"
+        path = "service/app/hashiapp_springboot_demo_url"
+    }
 }
 
-resource "template_file" "install" {
+data "template_file" "install" {
     template = "${file("${path.module}/scripts/install_app.sh.tpl")}"
 
     vars {
-        app_download_url  = "${consul_keys.app.var.hashiapp_demo_url}"
+        app_download_url  = "${data.consul_keys.app.var.hashiapp_demo_url}"
+        app_springboot_download_url  = "${data.consul_keys.app.var.hashiapp_springboot_demo_url}"
         vault_token       = "${var.vault_token}"
         consul_url        = "${var.consul}"
     }
 }
 
+data "template_file" "nomad_server" {
+    template = "${file("${path.module}/scripts/nomad_server.hcl.tpl")}"
+
+    vars {
+        consul_url = "${var.consul}"
+    }
+}
+
+data "template_file" "nomad_job" {
+    template = "${file("${path.module}/scripts/hashiapp_demo.nomad.tpl")}"
+
+    vars {
+        app_download_url  = "${data.consul_keys.app.var.hashiapp_springboot_demo_url}"
+        vault_token       = "${var.vault_token}"
+        vault_addr        = "${var.consul}"
+    }
+}
+
 # Start our instance with the dynamic ami value
 resource "aws_instance" "app" {
-    ami = "${consul_keys.app.var.ami}"
+    ami = "${data.consul_keys.app.var.ami}"
     instance_type = "${var.instance_type}"
     key_name = "${var.key_name}"
     count = "${var.servers}"
     security_groups = ["${aws_security_group.app.name}"]
-    user_data = "${template_file.install.rendered}"
+    user_data = "${data.template_file.install.rendered}"
 
     connection {
         user = "${var.user}"
-        private_key = "${var.key_path}"
+        private_key = "${file(var.key_path)}"
     }
 
     tags {
@@ -61,7 +84,12 @@ resource "aws_instance" "app" {
     }
 
     provisioner "file" {
-        source = "${path.module}/scripts/nomad_server.hcl"
+        content = "${data.template_file.nomad_job.rendered}"
+        destination = "/tmp/hashiapp-demo.nomad"
+    }
+
+    provisioner "file" {
+        content = "${data.template_file.nomad_server.rendered}"
         destination = "/tmp/server.hcl"
     }
 
@@ -74,8 +102,7 @@ resource "aws_instance" "app" {
 
     provisioner "remote-exec" {
         inline = [
-          "sudo sed -i s/IP_ADDRESS/${aws_instance.app.private_ip}/g /opt/nomad/server.hcl",
-          "sudo sed -i s/CONSUL_URL/${consul}/g /opt/nomad/server.hcl",
+          "sudo sed -i s/PRIVATE_IP/${aws_instance.app.private_ip}/g /opt/nomad/server.hcl",
         ]
     }
 
@@ -108,6 +135,14 @@ resource "aws_security_group" "app" {
     ingress {
         from_port = 8080
         to_port = 8080
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    // These are for internal traffic
+    ingress {
+        from_port = 8090
+        to_port = 8090
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }

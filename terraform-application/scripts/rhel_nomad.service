@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 EnvironmentFile=-/etc/sysconfig/nomad
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent -config /opt/nomad/server.hcl
+ExecStart=/usr/local/bin/nomad agent -server -config /opt/nomad/server.hcl
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 

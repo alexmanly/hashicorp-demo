@@ -12,9 +12,9 @@ bind_addr = "0.0.0.0"
 # and clients. The IPs can be materialized by Terraform or be replaced by an
 # init script.
 advertise {
-    http = "IP_ADDRESS:4646"
-    rpc = "IP_ADDRESS:4647"
-    serf = "IP_ADDRESS:4648"
+    http = "PRIVATE_IP:4646"
+    rpc = "PRIVATE_IP:4647"
+    serf = "PRIVATE_IP:4648"
 }
 
 # Ship metrics to monitor the health of the cluster and to see task resource
@@ -34,7 +34,7 @@ server {
 
 consul {
     # The address to the Consul agent.
-    address = "CONSUL_URL"
+    address = "${consul_url}"
 
     # The service name to register the server and client with Consul.
     server_service_name = "nomad"
