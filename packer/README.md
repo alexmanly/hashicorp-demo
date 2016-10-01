@@ -14,7 +14,24 @@ The cookbooks to be installed in the Packer image should be added to the `cookbo
 
 ## Building the Image
 
-The image is built with `packer build -var aws_access_key=${AAKI} -var aws_secret_key=${ASAK} -machine-readable basebuild.json`
+The image is built with this command:
+
+```bash
+packer build -var aws_access_key=${AAKI} -var aws_secret_key=${ASAK} basebuild.json
+```
+
+## Upload the AMI ID to Consul
+
+To upload the AMI to Consul use the following commands:
+
+```bash
+export AAKI=MY-AWS-ID
+export ASAK=MY-AWS-KEY
+export CONSUL_ADDR=MY-CONSUL-ADDRESS
+export AMI_ID=$(packer build -var aws_access_key=${AAKI} -var aws_secret_key=${ASAK} -machine-readable basebuild.json | awk -F, '$0 ~/artifact,0,id/ {print $6}' | cut -f2 -d:)
+echo "Storing AMI ID ${AMI_ID} in Consul..."
+curl -X PUT -d ${AMI_ID} http://$CONSUL_ADDR/v1/kv/service/app/launch_ami
+```
 
 ## Rake
 
