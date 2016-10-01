@@ -20,8 +20,8 @@ mvn deploy
 ## Run the Application
 This application required a couple of enviroment variables to be set for the application to run successfully.  Set these environment variables in the shell that you will run the Java application from:
 
-| NAME        | VALUE                                  | 
-| ---------------------------------------------------- |
+| NAME        | VALUE                                  |
+| ----------- | -------------------------------------- |
 | VAULT_ADDR  | http://IP-ADDRESS-OF-VAULT-SERVER:8500 |
 | VAULT_TOKEN | REDACTED                               |
 
