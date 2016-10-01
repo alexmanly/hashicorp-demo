@@ -23,7 +23,8 @@ EOF
 
 echo "Installing Systemd service..."
 sudo mkdir -p /etc/systemd/system/consul.d
-sudo echo '{"service": {"name": "web", "tags": ["hashiapp-demo"], "port": 8080, "check": {"script": "curl http://localhost:8080/hashiapp-demo/rest/health >/dev/null 2>&1", "interval": "10s"}}}' | sudo tee /etc/systemd/system/consul.d/web.json > /dev/null
+sudo echo '{"service": {"name": "web1", "tags": ["hashiapp-demo"], "port": 8080, "check": {"script": "curl http://localhost:8080/hashiapp-demo/rest/health >/dev/null 2>&1", "interval": "10s"}}}' | sudo tee /etc/systemd/system/consul.d/web1.json > /dev/null
+sudo echo '{"service": {"name": "web2", "tags": ["hashiapp-springboot-demo"], "port": 8090, "check": {"script": "curl http://localhost:8090/health >/dev/null 2>&1", "interval": "10s"}}}' | sudo tee /etc/systemd/system/consul.d/web2.json > /dev/null
 sudo chown root:root /tmp/consul.service
 sudo mv /tmp/consul.service /etc/systemd/system/consul.service
 sudo chmod 0644 /etc/systemd/system/consul.service
