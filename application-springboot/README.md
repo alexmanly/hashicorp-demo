@@ -33,7 +33,7 @@ export VAULT_TOKEN="MY VAULT TOKEN"
 java -jar <PATH to JAR file>
 ```
 
-This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./src/main/java/resources/application.properties) file.
+This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./src/main/resources/application.properties) file.
 
 ## Test the Application
 The exposed endpoints are:
