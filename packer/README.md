@@ -4,23 +4,17 @@ This folder contains files to build base images with Packer.
 
 The `basebuild.json` file contains the Packer definitions.  This currently uses a base RedHat 7.x AMI and adds a local Chef Solo invocation to install desired cookbooks.
 
-## See the following documents for helpful tips form the AWS enablement sessions:
-
-* [AWSEnablementRevisionDocumentv1.0](https://github.dev.global.tesco.org/97CoreDevOpsTools/DevOps_Platform_Terraform/blob/master/AWSEnablementRevisionDocumentv1.0.pdf)
-* [SendachiOrganisingTerraform](https://github.dev.global.tesco.org/97CoreDevOpsTools/DevOps_Platform_Terraform/blob/master/SendachiOrganisingTerraform.pdf)
-
-
 ## Requirements
 
 A Ruby stack with `bundle`.  Running `bundle install` inside this directory will install the Gem dependencies.
 
 ## Cookbooks
 
-The cookbooks to be installed in the Packer image should be added to the `cookbooks/Berksfile`.
+The cookbooks to be installed in the Packer image should be added to the `cookbooks/Berksfile`.  The applications installed into the image are `git`, `java` and `tomcat`.
 
 ## Building the Image
 
-The image is built with `packer build ./basebuild.json`
+The image is built with `packer build -var aws_access_key=${AAKI} -var aws_secret_key=${ASAK} -machine-readable basebuild.json`
 
 ## Rake
 
