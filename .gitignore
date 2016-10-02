@@ -7,6 +7,8 @@
 /terraform-vault/terraform.tfstate
 /terraform-vault/terraform.tfstate.backup
 
+*/build-hidden.sh
+
 *.class
 
 # Mobile Tools for Java (J2ME)
