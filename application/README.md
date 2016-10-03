@@ -17,6 +17,23 @@ If you would like to deploy the WAR file to an AWS S3 bucket then you need to co
 mvn deploy
 ```
 
+## Upload the Application URL to Consul
+If you would like to store the location of the WAR file URL in Consul then run these commands:
+
+```bash
+mvn clean install deploy
+export CONSUL_ADDR="REDACTED"
+export CONSUL_KEY="service/app/my_app"
+export AWS_REGION="us-west-2"
+export VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+export GROUP_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.groupId | grep -v '\[' | sed s@[.]@/@g)
+export ARTIFACT_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.artifactId | grep -v '\[')
+export PACKAGING=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.packaging | grep -v '\[')
+export URL="https://s3-${AWS_REGION}.amazonaws.com/${ARTIFACT_ID}/release/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
+echo "Uploading to Consul key [${CONSUL_KEY}]....Artifact URL [${URL}"]
+curl -X PUT -d ${URL} http://${CONSUL_ADDR}/v1/kv/${CONSUL_KEY}
+```
+
 ## Run the Application
 Install the WAR file into a [Tomcat](https://tomcat.apache.org/) container in the webapps directory.  This application required a couple of enviroment variables to be set for the application to run successfully.  Set these environment variables in the shell that you will run the Tomcat container in:
 
