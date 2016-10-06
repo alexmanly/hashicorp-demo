@@ -2,12 +2,20 @@
 set -e
 
 echo "Started: $(date)"
-echo "Please, enter the S3 buckt name"
-read S3_BUCKET
-echo "Compiling Application and Generating WAR file"
-mvn clean install
-echo "Uploading WAR file to s3"
-export AWS_ACCESS_KEY_ID=$(sed "2q;d" ~/.aws/credentials | awk -F'=' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-export AWS_SECRET_ACCESS_KEY=$(sed "3q;d" ~/.aws/credentials | awk -F'=' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-aws s3 cp ./target/hashiapp-demo-0.0.1-SNAPSHOT.war s3://$S3_BUCKET/snapshot/com/amanly/hashiapp-demo/0.0.1-SNAPSHOT/hashiapp-demo-0.0.1-SNAPSHOT.war --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+echo "Please, enter the consul host"
+read CONSUL_HOST
+
+echo "Compiling Application and Generating WAR file and uploading to AWS s3"
+mvn clean install deploy
+
+export CONSUL_PORT="8500"
+export CONSUL_KEY="service/app/hashiapp_demo_url"
+export AWS_REGION="us-west-2"
+export VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
+export GROUP_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.groupId | grep -v '\[' | sed s@[.]@/@g)
+export ARTIFACT_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.artifactId | grep -v '\[')
+export PACKAGING=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.packaging | grep -v '\[')
+export URL="https://s3-${AWS_REGION}.amazonaws.com/${ARTIFACT_ID}/release/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
+echo "Uploading to Consul key [${CONSUL_KEY}]....Artifact URL [${URL}"]
+curl -X PUT -d ${URL} http://${CONSUL_HOST}:${CONSUL_PORT}/v1/kv/${CONSUL_KEY}
 echo "Finished: $(date)"

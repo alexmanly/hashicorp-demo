@@ -21,9 +21,11 @@ class VaultController {
     @RequestMapping("/vault/{param1}/{param2}")
 	public String getSecret(@PathVariable String param1, @PathVariable String param2) {
 		try {
+			logger.debug(vault.logical().read(param1 + "/" + param2));
 			final String value = getVault().logical().read(param1 + "/" + param2).getData().get("value");
 			return "Vault secret : " + value + "\n";
 		} catch (VaultException e) {
+			logger.error("Error with the path [" + param1 + "/" + param2 + "]: " + e.getMessage());
 			return "Unable to find a vault secret for path: " + param1 + "/" + param2;
 		}
 	}

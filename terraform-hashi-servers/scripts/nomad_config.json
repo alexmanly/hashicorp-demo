@@ -1,0 +1,42 @@
+# Name the region, if omitted, the default "global" region will be used.
+region = "europe"
+
+# Persist data to a location that will survive a machine reboot.
+data_dir = "/opt/nomad/"
+
+# Bind to all addresses so that the Nomad agent is available both on loopback
+# and externally.
+bind_addr = "0.0.0.0"
+
+# Advertise an accessible IP address so the server is reachable by other servers
+# and clients. The IPs can be materialized by Terraform or be replaced by an
+# init script.
+advertise {
+    http = "PRIVATE_IP:4646"
+    rpc = "PRIVATE_IP:4647"
+    serf = "PRIVATE_IP:4648"
+}
+
+# Enable debug endpoints.
+enable_debug = true
+
+server {
+    enabled = true
+    bootstrap_expect = BOOTSTRAP_SERVER_COUNT
+}
+
+consul {
+    # The address to the Consul agent.
+    address = "CONSUL_ADDRESS:8500"
+
+    # The service name to register the server and client with Consul.
+    server_service_name = "nomad"
+    client_service_name = "nomad-client"
+
+    # Enables automatically registering the services.
+    auto_advertise = true
+
+    # Enabling the server and client to bootstrap using Consul.
+    server_auto_join = true
+    client_auto_join = true
+}

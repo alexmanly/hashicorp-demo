@@ -10,9 +10,9 @@
       "region": "us-east-1",
       "access_key": "{{user `aws_access_key`}}",
       "secret_key": "{{user `aws_secret_key`}}",
-      "source_ami": "ami-2051294a",
+      "source_ami": "ami-fce3c696",
       "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
+      "ssh_username": "ubuntu",
       "ami_name": "infrastructure_{{isotime \"2006/01/02_15h04m05s\"}}",
       "ssh_pty" : true
     }
@@ -20,8 +20,43 @@
 
   "provisioners": [
     {
+      "type": "file",
+      "source": "scripts/consul.env",
+      "destination": "/tmp/consul.env"
+    },
+    {
+      "type": "file",
+      "source": "scripts/consul_config.json",
+      "destination": "/tmp/consul_config.json"
+    },
+    {
+      "type": "file",
+      "source": "scripts/consul_upstart.conf",
+      "destination": "/tmp/consul_upstart.conf"
+    },
+    {
+      "type": "file",
+      "source": "scripts/nomad.env",
+      "destination": "/tmp/nomad.env"
+    },
+    {
+      "type": "file",
+      "source": "scripts/nomad_config.json",
+      "destination": "/tmp/nomad_config.json"
+    },
+    {
+      "type": "file",
+      "source": "scripts/nomad_upstart.conf",
+      "destination": "/tmp/nomad_upstart.conf"
+    },
+    {
       "type": "shell",
-      "script": "scripts/install_chefdk.sh"
+      "scripts": [
+        "scripts/chef_install.sh",
+        "scripts/consul_install.sh",
+        "scripts/nomad_install.sh",
+        "scripts/ip_tables.sh"
+      ]
     },
     {
       "type": "chef-solo",

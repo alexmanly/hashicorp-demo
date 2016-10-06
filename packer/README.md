@@ -2,7 +2,7 @@
 
 This folder contains files to build base images with Packer.
 
-The `basebuild.json` file contains the Packer definitions.  This currently uses a base RedHat 7.x AMI and adds a local Chef Solo invocation to install desired cookbooks.
+The `basebuild.json` file contains the Packer definitions.  This currently uses a base Ubuntu 14.04.3 AMI and adds a local Chef Solo invocation to install desired cookbooks.  It also installs the Consul and Nomad binaries.
 
 ## Requirements
 

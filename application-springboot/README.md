@@ -30,7 +30,7 @@ export GROUP_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate 
 export ARTIFACT_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.artifactId | grep -v '\[')
 export PACKAGING=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.packaging | grep -v '\[')
 export URL="https://s3-${AWS_REGION}.amazonaws.com/${ARTIFACT_ID}/release/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
-echo "Uploading to Consul....Artifact URL: ${URL}"
+echo "Uploading to Consul key [${CONSUL_KEY}]....Artifact URL [${URL}"]
 curl -X PUT -d ${URL} http://${CONSUL_ADDR}/v1/kv/${CONSUL_KEY}
 ```
 

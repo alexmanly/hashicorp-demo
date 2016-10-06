@@ -1,11 +1,8 @@
 /application/target
 /application-springboot/target
-/terraform-application/terraform.tfstate
-/terraform-application/terraform.tfstate.backup
-/terraform-consul/terraform.tfstate
-/terraform-consul/terraform.tfstate.backup
-/terraform-vault/terraform.tfstate
-/terraform-vault/terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+
 
 */build-hidden.sh
 
