@@ -15,6 +15,6 @@ To execute this project you will need to run the projects in order.
     NOMAD_3_HOST - e.g. "ec2-30-30-30-30.compute-1.amazonaws.com"  
     
 2. [Create the Java Tomcat Web Application](./application).
-4. [Create the Java SpingBoot Application](./application-springboot).
-5. [Create the AMI using Packer](./packer).
-6. [Create the Appliction Cluster using Terraform, Consul, Vault and Nomad](./terraform-hashi-clients).
+3. [Create the Java SpingBoot Application](./application-springboot).
+4. [Create the AMI using Packer](./packer).
+5. [Create the Appliction Cluster using Terraform, Consul, Vault and Nomad](./terraform-hashi-clients).
