@@ -128,7 +128,7 @@ resource "aws_security_group" "hashi_servers" {
         from_port = 4646
         to_port = 4648
         protocol = "tcp"
-        self = ["0.0.0.0/0"]
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
     ingress {
