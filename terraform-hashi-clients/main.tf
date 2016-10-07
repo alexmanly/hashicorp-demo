@@ -167,6 +167,20 @@ resource "aws_security_group" "hashi_clients" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
+    ingress {
+        from_port = 8080
+        to_port = 8080
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 8090
+        to_port = 8090
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
     // These are for maintenance
     ingress {
         from_port = 22
