@@ -21,7 +21,7 @@ class VaultController {
     @RequestMapping("/vault/{param1}/{param2}")
 	public String getSecret(@PathVariable String param1, @PathVariable String param2) {
 		try {
-			logger.debug(vault.logical().read(param1 + "/" + param2));
+			logger.debug(getVault().logical().read(param1 + "/" + param2));
 			final String value = getVault().logical().read(param1 + "/" + param2).getData().get("value");
 			return "Vault secret : " + value + "\n";
 		} catch (VaultException e) {
@@ -47,11 +47,9 @@ class VaultController {
 				logger.info("Found VAULT_ADDR environment variable set as: [" + vaultAddress + "]");
 			}
 			
-			Vault vault = null;
 			try {
 				vault = new Vault(new VaultConfig(vaultAddress, vaultToken));
 				logger.info("Connected to Vault Server");
-				return vault;
 			} catch (VaultException e) {
 				logger.error("Unable to connect to the Vault server.  Exiting application...");
 				System.exit(-1);
