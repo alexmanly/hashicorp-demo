@@ -55,7 +55,7 @@ variable "region" {
 }
 
 variable "servers" {
-    default = "1"
+    default = "3"
     description = "The number of Hashi clients to launch."
 }
 
