@@ -17,7 +17,11 @@ sudo chmod 0644 /etc/init/tomcat.conf
 sudo start tomcat
 
 echo "Downloading Java app..."
+sudo mkdir /opt/java_hashidemo
 sudo curl -L "${app_sb_download_url}" > /tmp/hashiapp-springboot-demo.jar
+sudo mv /tmp/hashiapp-springboot-demo.jar /opt/java_hashidemo/hashiapp-springboot-demo.jar
+sudo chown root:root /opt/java_hashidemo/hashiapp-springboot-demo.jar
+sudo chmod 0644 /opt/java_hashidemo/hashiapp-springboot-demo.jar
 
 echo "Installing Java App Upstart service..."
 sudo mv /tmp/java_app_upstart.conf /etc/init/javaapp.conf
@@ -40,6 +44,11 @@ sudo sed -i s/CONSUL_ADDRESS/${consul}/g /usr/local/etc/nomad_config.json
 sudo sed -i s/NOMAD_1/${nomad_1}/g /usr/local/etc/nomad_config.json
 sudo sed -i s/NOMAD_2/${nomad_2}/g /usr/local/etc/nomad_config.json
 sudo sed -i s/NOMAD_3/${nomad_3}/g /usr/local/etc/nomad_config.json
+
+echo 'Configuring Nomad Java Run configuration...'
+sudo mv /tmp/hashiapp-demo.nomad /opt/java_hashidemo/hashiapp-demo.nomad
+sudo chown root:root /opt/java_hashidemo/hashiapp-demo.nomad
+sudo chmod 0644 /opt/java_hashidemo/hashiapp-demo.nomad
 
 echo 'Starting Nomad...'
 sudo start nomad

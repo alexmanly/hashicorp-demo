@@ -108,7 +108,6 @@ resource "aws_instance" "client" {
         inline = [
           "chmod +x /tmp/configure.sh",
           "/tmp/configure.sh",
-          "rm /tmp/configure.sh",
         ]
     }
 }

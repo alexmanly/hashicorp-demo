@@ -10,5 +10,5 @@ script
   export VAULT_ADDR=${vault_addr}
   export VAULT_TOKEN=${vault_token}
 
-  exec /usr/bin/java -jar /tmp/hashiapp-springboot-demo.jar >>/var/log/java_app.log 2>&1
+  exec /usr/bin/java -jar /opt/java_hashidemo/hashiapp-springboot-demo.jar >>/var/log/java_app.log 2>&1
 end script
