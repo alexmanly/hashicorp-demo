@@ -50,10 +50,26 @@
       "destination": "/tmp/nomad_upstart.conf"
     },
     {
+      "type": "file",
+      "source": "scripts/vault.env",
+      "destination": "/tmp/vault.env"
+    },
+    {
+      "type": "file",
+      "source": "scripts/vault_config.json",
+      "destination": "/tmp/vault_config.json"
+    },
+    {
+      "type": "file",
+      "source": "scripts/vault_upstart.conf",
+      "destination": "/tmp/vault_upstart.conf"
+    },
+    {
       "type": "shell",
       "scripts": [
         "scripts/chef_install.sh",
         "scripts/consul_install.sh",
+        "scripts/vault_install.sh",
         "scripts/nomad_install.sh",
         "scripts/ip_tables.sh"
       ]
@@ -61,7 +77,7 @@
     {
       "type": "chef-solo",
       "cookbook_paths": ["cookbooks","cookbooks/berks-cookbooks"],
-      "run_list": ["git","java","tomcat"]
+      "run_list": ["git","java"]
     },
     {
       "type": "file",

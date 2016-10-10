@@ -13,7 +13,7 @@ sudo mv consul /usr/local/bin/consul
 sudo mkdir -p /opt/consul/data
 rm -f consul.zip
 
-echo "Installing Consul service..."
+echo "Installing Consul Upstart service..."
 sudo mkdir -p /etc/consul.d
 sudo mkdir -p /etc/service
 sudo chown root:root /tmp/consul_upstart.conf

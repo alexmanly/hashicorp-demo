@@ -22,12 +22,12 @@ sudo mv /tmp/nomad_upstart.conf /etc/init/nomad.conf
 sudo chown root:root /etc/init/nomad.conf
 sudo chmod 0644 /etc/init/nomad.conf
 
+echo "Installing Nomad service environment file..."
 sudo mv /tmp/nomad.env /etc/service/nomad
 sudo chmod 0644 /etc/service/nomad
 sudo chown root:root /etc/service/nomad
 
+echo "Installing Nomad service configuration file..."
 sudo mv /tmp/nomad_config.json /usr/local/etc/nomad_config.json
 sudo chown root:root /usr/local/etc/nomad_config.json
 sudo chmod 0644 /usr/local/etc/nomad_config.json
-
-

@@ -17,45 +17,15 @@ If you would like to deploy the JAR file to an AWS S3 bucket then you need to co
 mvn deploy
 ```
 
-## Upload the Application URL to Consul
-If you would like to store the location of the JAR file URL in Consul then run these commands:
-
-```bash
-echo "Started: $(date)"
-echo "Please, enter the consul host"
-read CONSUL_HOST
-echo "Compiling Application and Generating WAR file and uploading to AWS s3"
-mvn clean install deploy
-export CONSUL_PORT="8500"
-export CONSUL_KEY="service/app/hashiapp_springboot_demo_url"
-export AWS_REGION="us-west-2"
-export VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\[')
-export GROUP_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.groupId | grep -v '\[' | sed s@[.]@/@g)
-export ARTIFACT_ID=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.artifactId | grep -v '\[')
-export PACKAGING=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.packaging | grep -v '\[')
-export URL="https://s3-${AWS_REGION}.amazonaws.com/${ARTIFACT_ID}/release/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}/${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
-echo "Uploading to Consul key [${CONSUL_KEY}]....Artifact URL [${URL}"]
-curl -X PUT -d ${URL} http://${CONSUL_HOST}:${CONSUL_PORT}/v1/kv/${CONSUL_KEY}
-echo "Finished: $(date)"
-```
-
 ## Run the Application
-This application required a couple of enviroment variables to be set for the application to run successfully.  Set these environment variables in the shell that you will run the Java application from:
-
-| NAME        | VALUE                                  |
-| ----------- | -------------------------------------- |
-| VAULT_ADDR  | http://IP-ADDRESS-OF-VAULT-SERVER:8500 |
-| VAULT_TOKEN | REDACTED                               |
-
 Run this command to run the application
 
 ```bash
-export VAULT_ADDR="MY VAULT SERVER"
-export VAULT_TOKEN="MY VAULT TOKEN"
 java -jar <PATH to JAR file>
+/usr/bin/java -jar <PATH to JAR file> --spring.config.location=<PATH to JAR config dir>/ >>/var/log/java_app.log 2>&1
 ```
 
-This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./src/main/resources/application.properties) file.
+This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./application.properties) file.  Configure the Vault settings in the bootstrap.properties](./bootstrap.properties) file.  These files should be located in the *spring.config.location* directory.
 
 ## Test the Application
 The exposed endpoints are:
@@ -65,7 +35,7 @@ The exposed endpoints are:
 | http://localhost:8090/hello                     |
 | http://localhost:8090/hello/{name}              |
 | http://localhost:8090/version                   |
-| http://localhost:8090/vault/{path1}/{path2}     |
+| http://localhost:8090/vault                     |
 | http://localhost:8090/hashiapp-demo/rest/health |
 
 
