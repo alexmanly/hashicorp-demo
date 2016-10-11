@@ -6,13 +6,13 @@ To execute this project you will need to run the projects in order.
 
 1. [Create the Java SpingBoot Application](./application-springboot).
 
-    Make a note of the the following, used in the next projects:
+    Make a note of the the following, used in the terraform project:
 
       * Application URL
 
 2. [Create the AMI using Packer](./packer).
 
-    Make a note of the the following, used in the next projects:
+    Make a note of the the following, used in the terrafotm projects:
 
       * AMI ID
       
