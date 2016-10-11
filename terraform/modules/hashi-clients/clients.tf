@@ -124,41 +124,8 @@ resource "aws_instance" "client" {
         Name = "${var.tagName}-client-${count.index}"
     }
 
-    provisioner "file" {
-        content = "${data.template_file.java_app_upstart_conf.rendered}"
-        destination = "/tmp/java_app_upstart.conf"
-    }
-
-    provisioner "file" {
-        content = "${data.template_file.java_app_nomad_job.rendered}"
-        destination = "/tmp/java_app_nomad.job"
-    }
-
-    provisioner "file" {
-        content = "${data.template_file.nomad_client_conf.rendered}"
-        destination = "/tmp/hashiapp-demo.nomad"
-    }
-}
-
-resource "null_resource" "app_init" {
-    depends_on = ["aws_instance.client"]
-
-    triggers {
-        client_instance_ids = "${join(",", aws_instance.client.*.id)}"
-    }
-
-    count = "${var.server_count}"
-
-    connection {
-        host = "${element(aws_instance.client.*.public_ip, count.index)}"
-        user = "${var.user}"
-        private_key = "${file("${var.key_path}")}"
-    }
-
     provisioner "remote-exec" {
         inline = [
-            "sudo stop nomad",
-            "sudo rm /var/log/nomad.log",
             "sudo stop consul",
             "sudo rm /var/log/consul.log",
             "echo 'Configuring IP tables...'",
@@ -169,21 +136,23 @@ resource "null_resource" "app_init" {
             "sudo echo '{\"service\": {\"name\": \"javaapp\", \"tags\": [\"hashiapp-springboot-demo\"], \"port\": ${var.app_port}, \"check\": {\"script\": \"curl http://localhost:${var.app_port}/health >/dev/null 2>&1\", \"interval\": \"10s\"}}}' | sudo tee /etc/consul.d/web-java.json > /dev/null",
             "echo 'Starting Consul...'",
             "sudo start consul",
-            "sleep 40",
+            "sleep 30",
+            "echo 'Installing Java App Upstart service...'",
+            "sudo echo '${data.template_file.java_app_upstart_conf.rendered}' | sudo tee /etc/init/javaapp.conf > /dev/null",
+            "sudo chown root:root /etc/init/javaapp.conf",
+            "sudo chmod 0644 /etc/init/javaapp.conf",
+            "sudo start javaapp",
+            "sudo stop nomad",
+            "sudo rm /var/log/nomad.log",,
             "echo 'Configuring Nomad...'",
             "sudo sed -i s/CONSUL_ADDRESS/${element(var.server_instance_ips, 0)}/g /usr/local/etc/nomad_config.json",
             "sudo sed -i s/PRIVATE_IP/${element(var.client_instance_ips, count.index)}/g /usr/local/etc/nomad_config.json",
             "sudo echo '${data.template_file.nomad_client_conf.rendered}' | sudo tee -a /usr/local/etc/nomad_config.json > /dev/null",
-            "sudo mv /tmp/java_app_nomad.job ${var.app_install_path}/hashiapp-demo.nomad",
+            "sudo echo '${data.template_file.java_app_nomad_job.rendered}' | sudo tee ${var.app_install_path}/hashiapp-demo.nomad > /dev/null",
             "sudo chown root:root ${var.app_install_path}/hashiapp-demo.nomad",
             "sudo chmod 0644 ${var.app_install_path}/hashiapp-demo.nomad",
             "echo 'Starting Nomad...'",
-            "sudo start nomad",
-            "echo 'Installing Java App Upstart service...'",
-            "sudo mv /tmp/java_app_upstart.conf /etc/init/javaapp.conf",
-            "sudo chown root:root /etc/init/javaapp.conf",
-            "sudo chmod 0644 /etc/init/javaapp.conf",
-            "sudo start javaapp"
+            "sudo start nomad"
         ]    
     }
 }
