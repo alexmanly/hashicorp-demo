@@ -78,6 +78,15 @@ data "template_file" "nomad_server_conf" {
     }
 }
 
+data "template_file" "init_vault" {
+    template = "${file("${path.module}/scripts/init_vault.sh")}"
+
+    vars {
+        vault_app_password  = "${var.vault_app_password}"
+        vault_app_name      = "${var.vault_app_name}"
+    }
+}
+
 resource "aws_instance" "server" {
     ami = "${var.ami}"
     instance_type = "${var.instance_type}"
@@ -120,7 +129,7 @@ resource "aws_instance" "server" {
     }
 }
 
-resource "null_resource" "upload_app_urls" {
+resource "null_resource" "upload_app_url" {
   depends_on = ["aws_instance.server"]
 
   triggers {
@@ -141,7 +150,7 @@ resource "null_resource" "upload_app_urls" {
 }
 
 resource "null_resource" "vault_init" {
-  depends_on = ["null_resource.upload_app_urls"]
+  depends_on = ["null_resource.upload_app_url"]
 
   triggers {
       server_instance_ids = "${join(",", aws_instance.server.*.id)}"

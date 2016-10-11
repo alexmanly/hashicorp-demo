@@ -17,6 +17,11 @@ variable "app_port" {
     default = 8090
 }
 
+variable "vault_app_name" {
+    description = "Vault application name."
+    default = "hashiapp-demo"
+}
+
 variable "ami" {
     description = "AWS AMI Id"
     default = "ami-67286670"

@@ -50,3 +50,12 @@ variable "javaapp_jar_url" {
     description = "URL to the JAR file to application."
     default = "https://s3-us-west-2.amazonaws.com/hashiapp-springboot-demo/release/com/amanly/hashiapp-springboot-demo/1.0.0/hashiapp-springboot-demo-1.0.0.jar"
 }
+
+variable "vault_app_password" {
+    description = "Vault application password."
+}
+
+variable "vault_app_name" {
+    description = "Vault application name."
+    default = "hashiapp-demo"
+}

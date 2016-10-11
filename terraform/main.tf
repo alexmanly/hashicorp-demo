@@ -6,6 +6,8 @@ provider "aws" {
 
 module "hashi-servers" {
   source = "./modules/hashi-servers"
+
+  vault_app_password = "${var.vault_app_password}"
 }
 
 module "hashi-clients" {

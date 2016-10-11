@@ -23,7 +23,7 @@ EOF
   sudo chmod 0644 ${app_install_path}/application.properties
   export VAULT_TOKEN=$(curl -sf "http://${consul_ip}:8500/v1/kv/service/vault/root-token?raw")
   cat << EOF | sudo tee ${app_install_path}/bootstrap.properties
-spring.application.name: hashiapp-demo
+spring.application.name: ${vault_app_name}
 spring.cloud.vault.host: ${consul_ip}
 spring.cloud.vault.port: 8200
 spring.cloud.vault.scheme: http

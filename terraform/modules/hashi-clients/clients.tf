@@ -91,6 +91,7 @@ data "template_file" "java_app_upstart_conf" {
     vars {
         app_sb_download_url = "${var.app_sb_download_url}"
         consul_ip           = "${element(var.server_instance_ips, 0)}"
+        vault_app_name      = "${var.vault_app_name}"
         app_install_path    = "${var.app_install_path}"
         app_port            = "${var.app_port}"
     }

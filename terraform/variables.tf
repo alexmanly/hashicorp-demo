@@ -10,3 +10,7 @@ variable "region" {
     default = "us-east-1"
     description = "The region of AWS, for AMI lookups."
 }
+
+variable "vault_app_password" {
+    description = "Vault application password."
+}
