@@ -89,7 +89,7 @@ data "template_file" "java_app_upstart_conf" {
     template = "${file("${path.module}/scripts/java_app_upstart_conf.tpl")}"
 
     vars {
-        app_sb_download_url = "${var.app_sb_download_url}"
+        app_download_url    = "${var.app_download_url}"
         consul_ip           = "${element(var.server_instance_ips, 0)}"
         vault_app_name      = "${var.vault_app_name}"
         app_install_path    = "${var.app_install_path}"
@@ -101,7 +101,7 @@ data "template_file" "java_app_nomad_job" {
     template = "${file("${path.module}/scripts/java_app_nomad_job.tpl")}"
 
     vars {
-        app_sb_download_url = "${var.app_sb_download_url}"
+        app_download_url    = "${var.app_download_url}"
         app_install_path    = "${var.app_install_path}"
         app_port            = "${var.app_port}"
     }

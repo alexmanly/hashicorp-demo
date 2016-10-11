@@ -2,9 +2,8 @@ variable "consul_dns" {
     description = "Consul DNS."
 }
 
-variable "app_sb_download_url" {
+variable "app_download_url" {
     description = "URL to Java Application JAR file."
-    default = "https://s3-us-west-2.amazonaws.com/hashiapp-springboot-demo/release/com/amanly/hashiapp-springboot-demo/1.0.0/hashiapp-springboot-demo-1.0.0.jar"
 }
 
 variable "app_install_path" {

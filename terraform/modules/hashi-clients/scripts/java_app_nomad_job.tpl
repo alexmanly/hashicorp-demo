@@ -31,7 +31,7 @@ job "hashiapp-demo" {
             # Specifying an artifact is required with the "java"
             # driver. This is the # mechanism to ship the Jar to be run.
             artifact {
-                source = "${app_sb_download_url}"
+                source = "${app_download_url}"
             }
 
             service {

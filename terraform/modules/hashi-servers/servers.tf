@@ -78,15 +78,6 @@ data "template_file" "nomad_server_conf" {
     }
 }
 
-data "template_file" "init_vault" {
-    template = "${file("${path.module}/scripts/init_vault.sh")}"
-
-    vars {
-        vault_app_password  = "${var.vault_app_password}"
-        vault_app_name      = "${var.vault_app_name}"
-    }
-}
-
 resource "aws_instance" "server" {
     ami = "${var.ami}"
     instance_type = "${var.instance_type}"
@@ -129,28 +120,8 @@ resource "aws_instance" "server" {
     }
 }
 
-resource "null_resource" "upload_app_url" {
-  depends_on = ["aws_instance.server"]
-
-  triggers {
-    instance_count = "${var.server_count}" 
-  }
-
-  connection {
-    host = "${element(aws_instance.server.*.public_ip, 0)}"
-    user = "${var.user}"
-    private_key = "${file("${var.key_path}")}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo curl -X PUT -d \"${var.javaapp_jar_url}\" http://${element(var.server_instance_ips, 0)}:8500/v1/kv/service/app/hashiapp_springboot_demo_url"
-    ]
-  }
-}
-
 resource "null_resource" "vault_init" {
-  depends_on = ["null_resource.upload_app_url"]
+  depends_on = ["aws_instance.server"]
 
   triggers {
       server_instance_ids = "${join(",", aws_instance.server.*.id)}"
@@ -173,6 +144,28 @@ resource "null_resource" "vault_init" {
     inline = [
       "chmod +x /tmp/init_vault.sh",
       "/tmp/init_vault.sh"
+    ]
+  }
+}
+
+resource "null_resource" "upload_app_url" {
+  depends_on = ["null_resource.vault_init"]
+
+  triggers {
+      server_instance_id = "${aws_instance.server.0.id}"
+  }
+
+  connection {
+    host = "${aws_instance.server.0.public_ip}"
+    user = "${var.user}"
+    private_key = "${file("${var.key_path}")}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "export VAULT_ADDR=http://127.0.0.1:8200",
+      "vault write secret/${var.vault_app_name} password=${var.vault_app_password}",
+      "curl -X PUT -d \"${var.app_download_url}\" http://${element(var.server_instance_ips, 0)}:8500/v1/kv/service/app/hashiapp_springboot_demo_url"
     ]
   }
 }

@@ -9,7 +9,7 @@ script
 if [ ! -f ${app_install_path}/hashiapp-springboot-demo.jar ]; then
 	echo "Downloading Java app..."
   sudo mkdir -p ${app_install_path}
-  sudo curl -L "${app_sb_download_url}" > /tmp/hashiapp-springboot-demo.jar
+  sudo curl -L "${app_download_url}" > /tmp/hashiapp-springboot-demo.jar
   sudo mv /tmp/hashiapp-springboot-demo.jar ${app_install_path}/hashiapp-springboot-demo.jar
   sudo chown root:root ${app_install_path}/hashiapp-springboot-demo.jar
   sudo chmod 0644 ${app_install_path}/hashiapp-springboot-demo.jar

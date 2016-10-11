@@ -11,6 +11,10 @@ variable "region" {
     description = "The region of AWS, for AMI lookups."
 }
 
+variable "app_download_url" {
+    description = "URL to Java Application JAR file."
+}
+
 variable "vault_app_password" {
     description = "Vault application password."
 }
