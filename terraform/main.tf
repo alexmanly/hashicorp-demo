@@ -7,13 +7,15 @@ provider "aws" {
 module "hashi-servers" {
   source = "./modules/hashi-servers"
 
+  ami								 = "${var.ami}"
   vault_app_password = "${var.vault_app_password}"
-  app_download_url = "${var.app_download_url}"
+  app_download_url  = "${var.app_download_url}"
 }
 
 module "hashi-clients" {
   source = "./modules/hashi-clients"
 
+  ami								 = "${var.ami}"
   consul_dns = "${module.hashi-servers.consul_dns}"
   app_download_url = "${var.app_download_url}"
 }

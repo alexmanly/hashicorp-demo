@@ -23,7 +23,6 @@ variable "vault_app_name" {
 
 variable "ami" {
     description = "AWS AMI Id"
-    default = "ami-67286670"
 }
 
 variable "subnet_id" {
