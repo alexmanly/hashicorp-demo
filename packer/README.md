@@ -10,7 +10,10 @@ A Ruby stack with `bundle`.  Running `bundle install` inside this directory will
 
 ## Cookbooks
 
-The cookbooks to be installed in the Packer image should be added to the `cookbooks/Berksfile`.  The applications installed into the image are `git`, `java` and `tomcat`.
+The cookbooks to be installed in the Packer image should be added to the `cookbooks/Berksfile`.  The applications installed into the image are `git` and`java`.
+
+## Scripts
+There are some scripts that are used to install `consul`, `vault` and `nomad`.
 
 ## Building the Image
 
