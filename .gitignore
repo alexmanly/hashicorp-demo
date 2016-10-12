@@ -1,8 +1,7 @@
 /application/target
-/application-springboot/target
 *.tfstate
 *.tfstate.backup
-*/.terraform
+/terraform/.terraform
 
 */build-hidden.sh
 
