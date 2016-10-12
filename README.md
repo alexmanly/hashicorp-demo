@@ -4,7 +4,7 @@ This project is designed to show how the different parts of the Hashicorp produc
 
 To execute this project you will need to run the projects in order.
 
-1. [Create the Java SpingBoot Application](./application-springboot).
+1. [Create the Java SpingBoot Application](./application).
 
     Make a note of the the following, used in the terraform project:
 
