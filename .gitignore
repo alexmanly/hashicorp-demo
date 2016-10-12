@@ -4,7 +4,7 @@
 /terraform/.terraform
 
 */build-hidden.sh
-
+build-hidden.sh
 *.class
 
 # Mobile Tools for Java (J2ME)
