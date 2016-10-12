@@ -55,8 +55,12 @@ popd
 pushd ${PWD}
 cd ./terraform
 echo "Generating Cluster..."
+export KEY_NAME="<REDACTED>"
+export KEY_PATH="<REDACTED>"
 TF_VAR_access_key=${AAKI} \
 TF_VAR_secret_key=${ASAK} \
+TF_VAR_key_name=${KEY_NAME} \
+TF_VAR_key_path=${KEY_PATH} \
 TF_VAR_ami=${AMI} \
 TF_VAR_app_download_url=${APP_URL} \
 TF_VAR_vault_app_password=${PASSWORD} \
