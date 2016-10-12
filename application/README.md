@@ -25,7 +25,7 @@ java -jar <PATH to JAR file>
 /usr/bin/java -jar <PATH to JAR file> --spring.config.location=<PATH to JAR config dir>/ >>/var/log/java_app.log 2>&1
 ```
 
-This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./application.properties) file.  Configure the Vault settings in the bootstrap.properties](./bootstrap.properties) file.  These files should be located in the *spring.config.location* directory.
+This application is configured to run on port 8090.  To change this port change the value in the [application.properties](./application.properties) file.  Configure the Vault settings in the [bootstrap.properties](./bootstrap.properties) file.  These files should be located in the *spring.config.location* directory.
 
 ## Test the Application
 The exposed endpoints are:
