@@ -71,11 +71,6 @@ resource "aws_security_group" "hashi_demo_server" {
 
 data "template_file" "nomad_server_conf" {
     template = "${file("${path.module}/scripts/nomad_server.conf.tpl")}"
-
-    vars {
-        server_count = "${var.server_count}"
-        consul_ip    = "${element(var.server_instance_ips, 0)}"
-    }
 }
 
 resource "aws_instance" "server" {
@@ -83,9 +78,7 @@ resource "aws_instance" "server" {
     instance_type = "${var.instance_type}"
     key_name = "${var.key_name}"
     count = "${var.server_count}"
-    subnet_id = "${var.subnet_id}"
-    private_ip = "${element(var.server_instance_ips, count.index)}"
-    security_groups = ["${aws_security_group.hashi_demo_server.id}"]
+    security_groups = ["${aws_security_group.hashi_demo_server.name}"]
 
     connection {
         user = "${var.user}"
@@ -106,10 +99,11 @@ resource "aws_instance" "server" {
             "sudo stop consul",
             "sudo rm /var/log/consul.log",
             "sudo echo 'CONSUL_FLAGS=\"-server -bootstrap-expect=${var.server_count} -ui -join=${aws_instance.server.0.private_dns} -data-dir=/opt/consul/data -client=0.0.0.0\"' | sudo tee /etc/service/consul > /dev/null",
-            "sudo sed -i s/CONSUL_ADDRESS/${element(var.server_instance_ips, 0)}/g /usr/local/etc/vault_config.json",
-            "sudo sed -i s/CONSUL_ADDRESS/${element(var.server_instance_ips, 0)}/g /usr/local/etc/nomad_config.json",
-            "sudo sed -i s/PRIVATE_IP/${element(var.server_instance_ips, count.index)}/g /usr/local/etc/nomad_config.json",
+            "sudo sed -i s/CONSUL_ADDRESS/${aws_instance.server.0.private_ip}/g /usr/local/etc/vault_config.json",
             "sudo echo '${data.template_file.nomad_server_conf.rendered}' | sudo tee -a /usr/local/etc/nomad_config.json > /dev/null",
+            "sudo sed -i s/CONSUL_ADDRESS/${aws_instance.server.0.private_ip}/g /usr/local/etc/nomad_config.json",
+            "sudo sed -i s/SERVER_COUNT/${var.server_count}/g /usr/local/etc/nomad_config.json",
+            "sudo sed -i s/PRIVATE_IP/${self.private_ip}/g /usr/local/etc/nomad_config.json",
             "echo Starting Consul...",
             "sudo start consul",
             "sleep 20",
@@ -165,7 +159,7 @@ resource "null_resource" "upload_app_url" {
     inline = [
       "export VAULT_ADDR=http://127.0.0.1:8200",
       "vault write secret/${var.vault_app_name} password=${var.vault_app_password}",
-      "curl -X PUT -d \"${var.app_download_url}\" http://${element(var.server_instance_ips, 0)}:8500/v1/kv/service/app/hashiapp_springboot_demo_url"
+      "curl -X PUT -d \"${var.app_download_url}\" http://${aws_instance.server.0.private_ip}:8500/v1/kv/service/app/hashiapp_springboot_demo_url"
     ]
   }
 }

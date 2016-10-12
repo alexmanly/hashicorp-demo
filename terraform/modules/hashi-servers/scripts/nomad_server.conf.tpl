@@ -1,12 +1,12 @@
 
 server {
   enabled = true
-  bootstrap_expect = ${server_count}
+  bootstrap_expect = SERVER_COUNT
 }
 
 consul {
     # The address to the Consul agent.
-    address = "${consul_ip}:8500"
+    address = "CONSUL_ADDRESS:8500"
 
     # The service name to register the server with Consul.
     server_service_name = "nomad"

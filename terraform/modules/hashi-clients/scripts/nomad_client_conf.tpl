@@ -1,12 +1,12 @@
 
 client {
   enabled = true
-  servers = ["${nomad_ips}"]
+  servers = ["NOMAD_IDS"]
 }
 
 consul {
     # The address to the Consul agent.
-    address = "${consul_ip}:8500"
+    address = "CONSUL_ADDRESS:8500"
 
     # The service name to register the client with Consul.
     client_service_name = "nomad-client"

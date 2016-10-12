@@ -1,5 +1,5 @@
 output "server_addresses" {
-    value = "${join("\n  ", formatlist("%s", aws_instance.server.*.public_dns))}"
+    value = "\n  ${join("\n  ", formatlist("%s", aws_instance.server.*.public_dns))}"
 }
 
 output "consul_dns" {
@@ -7,5 +7,5 @@ output "consul_dns" {
 }
 
 output "consul_url" {
-    value = "http://${element(aws_instance.server.*.public_dns, 0)}:8500/ui/"
+    value = "\n  http://${element(aws_instance.server.*.public_dns, 0)}:8500/ui/"
 }

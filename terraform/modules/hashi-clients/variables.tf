@@ -25,19 +25,6 @@ variable "ami" {
     description = "AWS AMI Id"
 }
 
-variable "subnet_id" {
-    description = "AWS Subnet ID"
-    default = "subnet-d16c3cfb"
-}
-
-variable "server_instance_ips" {
-  default = ["172.31.50.150", "172.31.50.151", "172.31.50.152"]
-}
-
-variable "client_instance_ips" {
-  default = ["172.31.60.150", "172.31.60.151", "172.31.60.152"]
-}
-
 variable "platform" {
     default = "ubuntu"
     description = "The OS Platform"
@@ -49,12 +36,10 @@ variable "user" {
 
 variable "key_name" {
     description = "SSH key name in your AWS account for AWS instances."
-    default = "amanly-vault"
 }
 
 variable "key_path" {
     description = "Path to the private key specified by key_name."
-    default = "/Users/alex/.ssh/amanly-vault.pem"
 }
 
 variable "server_count" {

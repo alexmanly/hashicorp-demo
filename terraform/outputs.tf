@@ -1,11 +1,17 @@
-output "consul_url" {
-    value = "${module.hashi-servers.consul_url}"
-}
+output "configuration" {
+	value = <<CONFIGURATION
 
-output "server_addresses" {
-    value = "${module.hashi-servers.server_addresses}"
-}
+Consul URL: 
+${module.hashi-servers.consul_url}
 
-output "client_addresses" {
-    value = "${module.hashi-clients.client_addresses}"
+Java App URLs: 
+${module.hashi-clients.app_urls}
+
+Server DNS's: 
+${module.hashi-servers.server_addresses}
+
+Client DNS's:
+${module.hashi-clients.server_addresses}
+
+CONFIGURATION
 }
